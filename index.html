@@ -53,6 +53,39 @@
   }
 
   /* =========================================================
+     스크롤 페이드 업 (Scroll Fade-Up) 애니메이션
+     ========================================================= */
+  .reveal-up {
+    opacity: 0;
+    transform: translateY(25px);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 0.22s ease,
+      border-color 0.22s ease,
+      padding-left 0.22s ease;
+    will-change: opacity, transform;
+  }
+
+  .reveal-up.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* 등장 완료 후 호버 Y축 이동이 필요한 카드 보정 */
+  .q4-card.reveal-up.is-visible:hover {
+    transform: translateY(-2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-up {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+
+  /* =========================================================
      [1] 상단 마스트헤드: 풀와이드 배치
      ========================================================= */
   header.masthead {
@@ -317,7 +350,7 @@
   }
 
   /* =========================================================
-     [2 & 3] 메인 히어로
+     [2 & 3] 메인 히어로 (애니메이션 대상 제외 — 접속 즉시 표시)
      ========================================================= */
   .hero-stage {
     position: relative;
@@ -576,13 +609,11 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: background-color 0.22s ease, border-color 0.22s ease, transform 0.22s ease;
   }
 
   .q4-card:hover {
     background-color: var(--bg-tint);
     border-color: var(--brand-teal);
-    transform: translateY(-2px);
   }
 
   .q4-num {
@@ -686,7 +717,6 @@
     gap: 20px;
     align-items: baseline;
     cursor: pointer;
-    transition: background-color 0.22s ease, padding-left 0.22s ease;
   }
 
   .ed-row:hover {
@@ -905,7 +935,6 @@
   .essay-item {
     padding-left: 18px;
     border-left: 2px solid var(--line-hair);
-    transition: border-color 0.25s ease, padding-left 0.25s ease;
   }
 
   .essay-item:hover {
@@ -942,7 +971,6 @@
   .pillar-item {
     padding: 12px 16px 12px 22px;
     border-left: 3px solid var(--line-hair);
-    transition: border-left-color 0.25s ease, background-color 0.25s ease, padding-left 0.25s ease;
   }
 
   .pillar-item:hover,
@@ -973,7 +1001,6 @@
     padding: 24px 0 24px 18px;
     border-bottom: 1px solid var(--line-hair);
     border-left: 3px solid transparent;
-    transition: border-left-color 0.25s ease, background-color 0.25s ease, padding-left 0.25s ease;
   }
 
   .dept-row:hover {
@@ -1256,7 +1283,6 @@
   }
 
   @media (max-width: 768px) {
-    /* 2. 가로 스크롤 및 우측 여백 제거 */
     html, body {
       width: 100vw;
       max-width: 100vw;
@@ -1270,7 +1296,6 @@
       padding-right: 20px;
     }
 
-    /* 1. 상단 헤더(GNB) 단순화: 대메뉴 텍스트 완전 숨김 + 우측 끝 햄버거 아이콘만 유지 */
     .gnb-nav {
       gap: 0;
     }
@@ -1289,7 +1314,6 @@
     .brand-motto { font-size: 0.66rem; }
     .brand-eng { font-size: 0.68rem; }
 
-    /* 3. 히어로 박스 텍스트 겹침 해결 및 모바일 여백 정돈 */
     .hero-stage {
       padding: 16px 0 28px;
     }
@@ -1446,6 +1470,7 @@
        [VIEW 0] 메인페이지
        ========================================================= -->
   <main id="view-home" class="view-section active">
+    <!-- 최상단 히어로 섹션: 접속 즉시 노출되도록 애니메이션 대상에서 제외 -->
     <section class="hero-stage">
       <div class="hero-wide-shell" id="heroCarousel" onmouseenter="pauseHeroAuto()" onmouseleave="startHeroAuto()">
         <!-- 슬라이드 1: 교회 소개 영상 -->
@@ -1493,7 +1518,7 @@
       </div>
     </section>
 
-    <!-- [3] 첫 화면 맨 아래쪽에 상단이 걸쳐 보이는 4단 핵심 안내 섹션 -->
+    <!-- [3] 4단 핵심 안내 섹션 (순차 등장 Stagger) -->
     <section class="quick-4-section">
       <div class="wrap">
         <div class="quick-4-head">
@@ -2661,6 +2686,70 @@
 
   <script>
     /* =========================================================
+       0. 스크롤 페이드 업 (Intersection Observer + 0.1s 순차 등장 Stagger)
+       ========================================================= */
+    const staggerGroups = [
+      '.quick-4-grid > .q4-card',
+      '.editorial-list > .ed-row',
+      '.essay-list > .essay-item',
+      '.pillar-list > .pillar-item',
+      '.sub-panel > .dept-row',
+      '.staff-grid-4 > .staff-card'
+    ];
+
+    const singleRevealSelectors = [
+      '.quick-4-head',
+      '.ed-section .asym-2 > div:first-child',
+      '.ed-section .asym-2-rev > div',
+      '.sub-panel > .article-head',
+      '.sub-panel > .article-block',
+      '.sub-panel > .ed-table',
+      '.sub-panel > .pagination-bar',
+      '.sub-panel > .tab-bar',
+      '.sub-panel > .staff-anchor-bar',
+      '.sub-panel > .facility-wrap',
+      '.sub-panel > .split-asym'
+    ];
+
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target); // 최초 1회 실행 후 감시 해제 (깜빡임 방지)
+        }
+      });
+    }, {
+      threshold: 0.08,
+      rootMargin: '0px 0px -30px 0px'
+    });
+
+    function initScrollReveal(scopeRoot = document) {
+      // 1) 그룹별 순차 등장(Stagger 0.1s) 대상 등록
+      staggerGroups.forEach(groupSelector => {
+        const items = scopeRoot.querySelectorAll(groupSelector);
+        items.forEach((el, idx) => {
+          if (el.closest('.hero-stage')) return;
+          if (!el.classList.contains('is-visible')) {
+            el.classList.add('reveal-up');
+            el.style.transitionDelay = `${(idx % 6) * 0.1}s`;
+            revealObserver.observe(el);
+          }
+        });
+      });
+
+      // 2) 단일 블록 대상 등록
+      singleRevealSelectors.forEach(sel => {
+        scopeRoot.querySelectorAll(sel).forEach(el => {
+          if (el.closest('.hero-stage')) return;
+          if (!el.classList.contains('is-visible') && !el.classList.contains('reveal-up')) {
+            el.classList.add('reveal-up');
+            revealObserver.observe(el);
+          }
+        });
+      });
+    }
+
+    /* =========================================================
        1. 메인 풀페이지 히어로 캐러셀 (5초 오토플레이 + 호버 일시정지 + 점 페이지네이션)
        ========================================================= */
     let currentHeroIdx = 0;
@@ -2706,8 +2795,10 @@
     function goMain() {
       document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
       document.querySelectorAll('.gnb-link').forEach(b => b.classList.remove('active'));
-      document.getElementById('view-home').classList.add('active');
+      const homeView = document.getElementById('view-home');
+      homeView.classList.add('active');
       document.getElementById('mobileDrawer').classList.remove('open');
+      initScrollReveal(homeView);
       startHeroAuto();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -2727,7 +2818,10 @@
       view.querySelectorAll('.sub-panel').forEach(p => p.classList.remove('active'));
       view.querySelectorAll('.side-link').forEach(b => b.classList.remove('active'));
       const targetPanel = document.getElementById(panelId);
-      if (targetPanel) targetPanel.classList.add('active');
+      if (targetPanel) {
+        targetPanel.classList.add('active');
+        initScrollReveal(targetPanel);
+      }
       const targetBtn = view.querySelector(`.side-link[data-panel="${panelId}"]`);
       if (targetBtn) targetBtn.classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2914,6 +3008,7 @@
     renderSermonPage('dawn', 1);
     renderSermonPage('youth', 1);
     renderFamilyEvents(1);
+    initScrollReveal(document.getElementById('view-home'));
   </script>
 </body>
 </html>
