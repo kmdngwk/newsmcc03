@@ -362,7 +362,7 @@
   }
 
   /* =========================================================
-     [2 & 3] 메인 히어로 (MP4 배경 동영상 + 어두운 그라데이션 오버레이)
+     [2 & 3] 메인 히어로 (1번: 순수 영상 클린 뷰 / 2번: 설교 슬라이드)
      ========================================================= */
   .hero-stage {
     position: relative;
@@ -409,8 +409,24 @@
     overflow: hidden;
   }
 
-  /* 히어로 배경 MP4 동영상 및 이미지 스타일 */
-  .hero-bg-video,
+  /* 1번 순수 영상 슬라이드 전용 (텍스트·오버레이 없는 클린 컨테이너) */
+  .hero-media-box.video-only-box {
+    padding: 0;
+    background-color: #0C1424;
+  }
+
+  /* 히어로 배경 MP4 동영상 및 이미지 스타일 (PC 기본값) */
+  .hero-bg-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    z-index: 0;
+    display: block;
+  }
+
   .hero-bg-photo {
     position: absolute;
     inset: 0;
@@ -428,8 +444,8 @@
     background: linear-gradient(
       to top,
       rgba(12, 20, 36, 0.78) 0%,
-      rgba(0, 0, 0, 0.45) 55%,
-      rgba(0, 0, 0, 0.25) 100%
+      rgba(0, 0, 0, 0.42) 55%,
+      rgba(0, 0, 0, 0.22) 100%
     );
     z-index: 1;
     pointer-events: none;
@@ -439,15 +455,15 @@
     position: relative;
     z-index: 2;
     align-self: flex-start;
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.6px;
-    padding: 5px 12px;
+    padding: 4px 10px;
     border: 1px solid rgba(249, 250, 249, 0.34);
     background-color: rgba(12, 20, 36, 0.35);
     backdrop-filter: blur(4px);
     color: rgba(249, 250, 249, 0.92);
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
 
   .hero-bottom-bar {
@@ -455,66 +471,61 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    gap: 32px;
+    gap: 28px;
     flex-wrap: wrap;
     position: relative;
     z-index: 2;
   }
 
   .hero-copy-left {
-    max-width: 680px;
+    max-width: 620px;
   }
 
   .hero-kicker {
     display: inline-block;
-    font-size: 0.8rem;
+    font-size: 0.74rem;
     font-weight: 700;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.7px;
     color: #9ED0D5;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
 
+  /* 설교 슬라이드 텍스트 폰트 축소 적용 */
   .hero-main-title {
     font-family: 'Noto Serif KR', serif;
-    font-size: 2.35rem;
+    font-size: 1.85rem;
     font-weight: 700;
-    line-height: 1.32;
-    letter-spacing: -0.7px;
-    margin-bottom: 12px;
+    line-height: 1.35;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
     color: #F9FAF9;
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.38);
   }
 
   .hero-sub-copy {
-    font-size: 0.98rem;
-    line-height: 1.72;
-    color: rgba(249, 250, 249, 0.92);
-    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
-  }
-
-  .hero-sub-copy.verse {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 1.02rem;
-    letter-spacing: -0.2px;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: rgba(249, 250, 249, 0.9);
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.38);
   }
 
   .hero-cta-right {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
   }
 
   .pill-btn-primary {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
     background-color: var(--cta-orange);
     color: var(--bg-base);
     border: 1px solid var(--cta-orange);
     border-radius: 999px;
-    padding: 13px 26px;
-    font-size: 0.92rem;
+    padding: 11px 22px;
+    font-size: 0.86rem;
     font-weight: 700;
     cursor: pointer;
     transition: transform 0.2s ease, opacity 0.2s ease;
@@ -528,14 +539,14 @@
   .pill-btn-secondary {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
     background-color: rgba(249, 250, 249, 0.16);
     backdrop-filter: blur(4px);
     color: var(--bg-base);
     border: 1px solid rgba(249, 250, 249, 0.55);
     border-radius: 999px;
-    padding: 13px 24px;
-    font-size: 0.92rem;
+    padding: 11px 20px;
+    font-size: 0.86rem;
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
@@ -1371,52 +1382,70 @@
 
     .hero-media-box {
       height: auto;
-      min-height: 400px;
-      padding: 24px 20px 28px;
-      gap: 28px;
+      min-height: 360px;
+      padding: 22px 20px 26px;
+      gap: 24px;
+    }
+
+    .hero-media-box.video-only-box {
+      padding: 0;
+      min-height: 260px;
+      aspect-ratio: 16 / 9;
+    }
+
+    /* [2. 모바일 화면 슬라이드별 초점 기준점 설정] */
+    /* 1) 영상 슬라이드: 화면 정중앙이 기준 */
+    .hero-bg-video {
+      object-fit: cover;
+      object-position: center center;
+    }
+
+    /* 2) 설교 이미지 슬라이드: 담임목사님·피사체가 잘리지 않도록 오른쪽 기준 */
+    .hero-bg-photo {
+      object-fit: cover;
+      object-position: right center;
     }
 
     .media-bg-tag {
       position: static;
       display: inline-block;
-      margin-bottom: 12px;
-      font-size: 0.74rem;
-      line-height: 1.45;
+      margin-bottom: 10px;
+      font-size: 0.7rem;
+      line-height: 1.4;
     }
 
     .hero-bottom-bar {
       flex-direction: column;
       align-items: flex-start;
-      gap: 22px;
+      gap: 18px;
     }
 
     .hero-kicker {
       display: block;
-      margin-top: 4px;
-      margin-bottom: 8px;
-      font-size: 0.76rem;
+      margin-top: 2px;
+      margin-bottom: 6px;
+      font-size: 0.72rem;
     }
 
     .hero-main-title {
-      font-size: 1.62rem;
+      font-size: 1.32rem;
       line-height: 1.36;
     }
 
-    .hero-sub-copy,
-    .hero-sub-copy.verse {
-      font-size: 0.92rem;
-      line-height: 1.68;
+    .hero-sub-copy {
+      font-size: 0.84rem;
+      line-height: 1.62;
     }
 
     .hero-cta-right {
       width: 100%;
-      gap: 10px;
+      gap: 8px;
     }
 
     .pill-btn-primary,
     .pill-btn-secondary {
-      padding: 11px 20px;
-      font-size: 0.86rem;
+      padding: 9px 18px;
+      font-size: 0.82rem;
     }
 
     .quick-4-grid { grid-template-columns: 1fr; }
@@ -1519,27 +1548,14 @@
   <main id="view-home" class="view-section active">
     <section class="hero-stage">
       <div class="hero-wide-shell" id="heroCarousel" onmouseenter="pauseHeroAuto()" onmouseleave="startHeroAuto()">
-        <!-- 슬라이드 1: MP4 배경 동영상 적용 -->
+        <!-- 슬라이드 1: 순수 MP4 동영상 클린 뷰 (문구 및 오버레이 모두 제거) -->
         <div class="hero-slide-item active" id="heroSlide-0">
-          <div class="hero-media-box">
+          <div class="hero-media-box video-only-box">
             <video class="hero-bg-video" src="hero_sermon.mp4" poster="hero_sermon_chae_kyungrak.jpg" autoplay muted loop playsinline></video>
-            <div class="hero-dark-overlay"></div>
-            <span class="media-bg-tag">SAEMMUL CHURCH · WORSHIP &amp; SERMON</span>
-            <div class="hero-bottom-bar">
-              <div class="hero-copy-left">
-                <span class="hero-kicker">SAEMMUL CHURCH · SINCE 1998</span>
-                <h1 class="hero-main-title">예수 행복 예수 사랑으로<br>사람을 남기는 샘물교회</h1>
-                <p class="hero-sub-copy verse">“내가 이것을 너희에게 이름은 내 기쁨이 너희 안에 있어 너희 기쁨을 충만하게 하려 함이라(요15:11)”</p>
-              </div>
-              <div class="hero-cta-right">
-                <button class="pill-btn-primary" onclick="openCategory('worship', 'worship-1')">주일 예배 및 Live 안내 →</button>
-                <button class="pill-btn-secondary" onclick="openCategory('intro', 'intro-3')">새가족 등록 안내</button>
-              </div>
-            </div>
           </div>
         </div>
 
-        <!-- 슬라이드 2: 담임목사님 설교 듣기 -->
+        <!-- 슬라이드 2: 담임목사님 설교 듣기 (폰트 축소 및 내용 유지) -->
         <div class="hero-slide-item" id="heroSlide-1">
           <div class="hero-media-box">
             <img src="hero_sermon_chae_kyungrak.jpg" alt="채경락 담임목사 주일설교" class="hero-bg-photo">
@@ -1561,7 +1577,7 @@
 
         <!-- 하단 작은 점(Dot) 페이지네이션 -->
         <div class="hero-dots-bar">
-          <button class="dot-btn active" aria-label="1번 슬라이드: 교회 소개 영상" onclick="manualHeroSlide(0)"></button>
+          <button class="dot-btn active" aria-label="1번 슬라이드: 교회 영상" onclick="manualHeroSlide(0)"></button>
           <button class="dot-btn" aria-label="2번 슬라이드: 담임목사님 설교 듣기" onclick="manualHeroSlide(1)"></button>
           <span class="pause-indicator">일시정지됨</span>
         </div>
@@ -1633,7 +1649,7 @@
       </div>
     </section>
 
-    <!-- 비대칭 섹션 1: 담임목사 인사말 (senior_chae_kyungrak.JPG 연결) -->
+    <!-- 비대칭 섹션 1: 담임목사 인사말 -->
     <section class="ed-section tinted">
       <div class="wrap asym-2-rev">
         <div class="prose">
@@ -1799,7 +1815,6 @@
           </div>
         </div>
 
-        <!-- 1-2 담임목사님 소개 (main_chae_kyungrak.JPG 연결) -->
         <div id="intro-2" class="sub-panel">
           <div class="article-head">
             <h2>담임목사님 소개</h2>
@@ -1870,7 +1885,6 @@
           </div>
         </div>
 
-        <!-- 1-4 섬기는 사람들 -->
         <div id="intro-4" class="sub-panel">
           <div class="article-head">
             <h2>섬기는 사람들</h2>
