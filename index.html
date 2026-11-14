@@ -337,10 +337,23 @@
     padding: 24px;
     color: var(--ink-sub);
     font-size: 0.85rem;
+    overflow: hidden;
   }
 
   .photo-frame.tall { aspect-ratio: 3 / 4; }
   .photo-frame.wide { aspect-ratio: 16 / 9; }
+
+  .photo-frame.has-photo {
+    padding: 0;
+  }
+
+  .photo-frame.has-photo img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: top;
+  }
 
   .photo-frame strong {
     font-weight: 600;
@@ -349,7 +362,7 @@
   }
 
   /* =========================================================
-     [2 & 3] 메인 히어로
+     [2 & 3] 메인 히어로 (설교 배경 이미지 + 은은한 어두운 그라데이션 오버레이)
      ========================================================= */
   .hero-stage {
     position: relative;
@@ -396,26 +409,44 @@
     overflow: hidden;
   }
 
-  .hero-media-box.sermon-mode {
-    background-color: var(--bg-tint);
-    color: var(--ink-navy);
+  /* 히어로 설교 배경 이미지 및 그라데이션 오버레이 */
+  .hero-bg-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    z-index: 0;
+    display: block;
+  }
+
+  .hero-dark-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(12, 20, 36, 0.78) 0%,
+      rgba(0, 0, 0, 0.45) 55%,
+      rgba(0, 0, 0, 0.25) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
   }
 
   .media-bg-tag {
+    position: relative;
+    z-index: 2;
     align-self: flex-start;
     font-size: 0.78rem;
     font-weight: 600;
     letter-spacing: 0.6px;
     padding: 5px 12px;
-    border: 1px solid rgba(249, 250, 249, 0.24);
-    color: rgba(249, 250, 249, 0.78);
+    border: 1px solid rgba(249, 250, 249, 0.34);
+    background-color: rgba(12, 20, 36, 0.35);
+    backdrop-filter: blur(4px);
+    color: rgba(249, 250, 249, 0.92);
     margin-bottom: 24px;
-  }
-
-  .hero-media-box.sermon-mode .media-bg-tag {
-    border-color: var(--line-hair);
-    color: var(--brand-teal);
-    background-color: rgba(249, 250, 249, 0.7);
   }
 
   .hero-bottom-bar {
@@ -425,6 +456,7 @@
     align-items: flex-end;
     gap: 32px;
     flex-wrap: wrap;
+    position: relative;
     z-index: 2;
   }
 
@@ -441,10 +473,6 @@
     margin-bottom: 10px;
   }
 
-  .hero-media-box.sermon-mode .hero-kicker {
-    color: var(--brand-teal);
-  }
-
   .hero-main-title {
     font-family: 'Noto Serif KR', serif;
     font-size: 2.35rem;
@@ -452,12 +480,15 @@
     line-height: 1.32;
     letter-spacing: -0.7px;
     margin-bottom: 12px;
+    color: #F9FAF9;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
   }
 
   .hero-sub-copy {
     font-size: 0.98rem;
     line-height: 1.72;
-    opacity: 0.9;
+    color: rgba(249, 250, 249, 0.92);
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
   }
 
   .hero-sub-copy.verse {
@@ -498,9 +529,10 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background-color: rgba(249, 250, 249, 0.12);
+    background-color: rgba(249, 250, 249, 0.16);
+    backdrop-filter: blur(4px);
     color: var(--bg-base);
-    border: 1px solid rgba(249, 250, 249, 0.45);
+    border: 1px solid rgba(249, 250, 249, 0.55);
     border-radius: 999px;
     padding: 13px 24px;
     font-size: 0.92rem;
@@ -510,20 +542,9 @@
   }
 
   .pill-btn-secondary:hover {
-    background-color: rgba(249, 250, 249, 0.22);
+    background-color: rgba(249, 250, 249, 0.28);
     border-color: var(--bg-base);
     transform: translateY(-2px);
-  }
-
-  .hero-media-box.sermon-mode .pill-btn-secondary {
-    background-color: var(--bg-base);
-    color: var(--ink-navy);
-    border: 1px solid var(--line-hair);
-  }
-
-  .hero-media-box.sermon-mode .pill-btn-secondary:hover {
-    border-color: var(--brand-teal);
-    color: var(--brand-teal);
   }
 
   /* 하단 점 페이지네이션 */
@@ -1351,7 +1372,7 @@
 
     .hero-media-box {
       height: auto;
-      min-height: 380px;
+      min-height: 400px;
       padding: 24px 20px 28px;
       gap: 28px;
     }
@@ -1382,6 +1403,7 @@
       line-height: 1.36;
     }
 
+    .hero-sub-copy,
     .hero-sub-copy.verse {
       font-size: 0.92rem;
       line-height: 1.68;
@@ -1516,10 +1538,12 @@
           </div>
         </div>
 
-        <!-- 슬라이드 2: 담임목사님 설교 듣기 -->
+        <!-- 슬라이드 2: 담임목사님 설교 듣기 (hero_sermon_chae_kyungrak.jpg + 은은한 어두운 오버레이 적용) -->
         <div class="hero-slide-item" id="heroSlide-1">
-          <div class="hero-media-box sermon-mode">
-            <span class="media-bg-tag">[16:9 채경락 담임목사 주일설교 현장 사진 영역]</span>
+          <div class="hero-media-box">
+            <img src="hero_sermon_chae_kyungrak.jpg" alt="채경락 담임목사 주일설교" class="hero-bg-photo">
+            <div class="hero-dark-overlay"></div>
+            <span class="media-bg-tag">SUNDAY SERMON · 주일예배 말씀</span>
             <div class="hero-bottom-bar">
               <div class="hero-copy-left">
                 <span class="hero-kicker">SUNDAY SERMON · 채경락 담임목사</span>
@@ -1627,9 +1651,8 @@
         </div>
 
         <div>
-          <div class="photo-frame tall" style="background-color:var(--bg-base);">
-            <strong>[담임목사 채경락 목사 현장 프로필 실사]</strong>
-            <span>권장 비율 3 : 4</span>
+          <div class="photo-frame tall has-photo" style="background-color:var(--bg-base);">
+            <img src="senior_chae_kyungrak.jpg" alt="채경락 담임목사">
           </div>
         </div>
       </div>
@@ -1782,9 +1805,8 @@
           </div>
           <div class="split-asym">
             <div>
-              <div class="photo-frame tall" style="margin-bottom:18px;">
-                <strong>[담임목사 채경락 목사 실제 프로필 사진]</strong>
-                <span>권장 비율 3 : 4</span>
+              <div class="photo-frame tall has-photo" style="margin-bottom:18px;">
+                <img src="main_chae_kyungrak.jpg" alt="채경락 담임목사">
               </div>
               <h3 class="serif" style="font-size:1.18rem; margin-bottom:8px;">담임목사 채경락</h3>
               <ul style="list-style:none; font-size:0.86rem; color:var(--ink-sub); line-height:1.78; border-top:1px solid var(--line-hair); padding-top:12px;">
@@ -1846,7 +1868,6 @@
           </div>
         </div>
 
-        <!-- 1-4 섬기는 사람들 (최상위 폴더 기준 [파일명].png 직접 연결) -->
         <div id="intro-4" class="sub-panel">
           <div class="article-head">
             <h2>섬기는 사람들</h2>
@@ -1871,7 +1892,7 @@
             <div class="staff-grid-4">
               <div class="staff-card">
                 <div class="staff-photo-wrap">
-                  <img src="senior_chae_kyungrak.png" alt="채경락 담임목사">
+                  <img src="main_chae_kyungrak.jpg" alt="채경락 담임목사">
                 </div>
                 <div class="staff-name">채경락</div>
                 <div class="staff-role">담임목사</div>
